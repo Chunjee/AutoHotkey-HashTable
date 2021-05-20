@@ -22,28 +22,27 @@ class hashtable
 		this._Count   := 0
 		loop % Items.Length()
 		{
-			if (!Items.hasKey(A_Index))
-			{
-				throw Exception("Missing Argument Defect", -1
-							   ,"hashtable.__New(Items*)")
+			if (!Items.hasKey(A_Index)) {
+				throw Exception("Missing Argument Defect", -1, "hashtable.__New(Items*)")
 			}
 			if (   !(    IsObject(Items[A_Index])
 						and Items[A_Index].hasKey("hasKey") != "")
 				or !(    Items[A_Index].hasKey(1)
 						and Items[A_Index].hasKey(2)
-						and Items[A_Index].Count() == 2))
-			{
-				throw Exception("Type Defect", -1
-							   ,"hashtable.__New(Items*)  Invalid argument.")
+						and Items[A_Index].Count() == 2)) {
+				throw Exception("Type Defect", -1, "hashtable.__New(Items*)  Invalid argument.")
 			}
 			this.create(Items[A_Index][1], Items[A_Index][2])
 		}
 		return this
 	}
 
-	Count()
+	count()
 	{
-		local
+		return this._Count
+	}
+	size()
+	{
 		return this._Count
 	}
 
@@ -54,9 +53,7 @@ class hashtable
 		if (IsObject(Key))
 		{
 			Hash := &Key
-		}
-		else
-		{
+		} else {
 			if Key is integer
 			{
 				Hash := Key
@@ -64,12 +61,9 @@ class hashtable
 			else if Key is float
 			{
 				TruncatedKey := Key & -1
-				if (Key == TruncatedKey)
-				{
+				if (Key == TruncatedKey) {
 					Hash := TruncatedKey
-				}
-				else
-				{
+				} else {
 					; This reinterpret casts a floating point value to an
 					; Integer with the same bitwise representation.
 					;
@@ -80,14 +74,11 @@ class hashtable
 					NumPut(Key, Hash,, "Double")
 					Hash := NumGet(Hash,, "Int64")
 				}
-			}
-			else
-			{
+			} else {
 				; This is the String hashing algorithm used in Java.  It makes
 				; use of modular arithmetic via Integer overflow.
 				Hash := 0
-				for _, Char in StrSplit(Key)
-				{
+				for _, Char in StrSplit(Key) {
 					Hash := 31 * Hash + Ord(Char)
 				}
 			}
@@ -100,16 +91,11 @@ class hashtable
 		local
 		Found := false
 		Hash  := this._GetHash(Key)
-		Item  := this._Buckets.hasKey(Hash) ? this._Buckets[Hash]
-			   : ""
-		while (!Found and Item != "")
-		{
-			if (Item.Key == Key)
-			{
+		Item  := this._Buckets.hasKey(Hash) ? this._Buckets[Hash] : ""
+		while (!Found and Item != "") {
+			if (Item.Key == Key) {
 				Found := true
-			}
-			else
-			{
+			} else {
 				Item := Item.Next
 			}
 		}
@@ -123,22 +109,17 @@ class hashtable
 		Hash         := this._GetHash(Key)
 		Item         := this._Buckets.hasKey(Hash) ? this._Buckets[Hash] : ""
 		PreviousItem := ""
-		while (!Found and Item != "")
-		{
-			if (Item.Key == Key)
-			{
+		while (!Found and Item != "") {
+			if (Item.Key == Key) {
 				Item.Value := Value
 				; Perform chain reordering to speed up future lookups.
-				if (PreviousItem != "")
-				{
+				if (PreviousItem != "") {
 					PreviousItem.Next   := Item.Next
 					Item.Next           := this._Buckets[Hash]
 					this._Buckets[Hash] := Item
 				}
 				Found := true
-			}
-			else
-			{
+			} else {
 				PreviousItem := Item
 				Item         := Item.Next
 			}
@@ -163,18 +144,14 @@ class hashtable
 		Found := false
 		Hash  := this._GetHash(Key)
 		Item  := this._Buckets.hasKey(Hash) ? this._Buckets[Hash] : ""
-		while (!Found)
-		{
+		while (!Found) {
 			if (Item == "")	{
 				return ""
 			}
-			if (Item.Key == Key)
-			{
+			if (Item.Key == Key) {
 				Value := Item.Value
 				Found := true
-			}
-			else
-			{
+			} else {
 				Item := Item.Next
 			}
 		}
@@ -195,8 +172,7 @@ class hashtable
 		Hash         := this._GetHash(Key)
 		Item         := this._Buckets.hasKey(Hash) ? this._Buckets[Hash] : ""
 		PreviousItem := ""
-		while (!Found)
-		{
+		while (!Found) {
 			if (Item == "")	{
 				return false
 			}
@@ -219,6 +195,13 @@ class hashtable
 			}
 		}
 		return Item.Key
+	}
+
+	clear()
+	{
+		local
+		this._Buckets := []
+		this._Count   := 0
 	}
 
 	clone()
