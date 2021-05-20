@@ -1,0 +1,34 @@
+{
+	"name": "hashtable.ahk",
+	"version": "0.1.0",
+	"description": "A class for hashtables in autohotkey",
+	"main": "export.ahk",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/Chunjee/hashtable.ahk.git"
+	},
+	"dependencies": {},
+	"devDependencies": {
+		"unit-testing.ahk": "^0.3.3"
+	},
+	"author": "Shawn Brooker",
+	"contributors": [
+		{
+			"name": "Shawn Brooker",
+			"url": "https://github.com/chunjee"
+		}
+	],
+	"license": "MIT",
+	"bugs": {
+		"url": "https://github.com/Chunjee/hashtable.ahk"
+	},
+	"homepage": "https://github.com/Chunjee/hashtable.ahk",
+	"keywords": [
+		"autohotkey",
+		"ahk",
+		"array",
+		"instant",
+		"hash",
+		"table"
+	]
+}
